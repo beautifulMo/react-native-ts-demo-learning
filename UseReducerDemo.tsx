@@ -3,56 +3,51 @@ import {Text, TouchableOpacity} from 'react-native';
 
 const PublicContext = createContext({});
 
+type ActionType = {type: 'reset' | 'increment' | 'decrement'; payload?: any};
+type ButtonMakerParamsType = {
+  buttonTitle: string;
+  action: ActionType;
+};
+
 const UseReducerDemo = () => {
   //init
   const initialState = {count: 0};
 
   //reducer 纯函数
-  // action: { type:'string', payload:any}
-  const reducer = (state, action) => {
+  const reducer = (state: {count: number}, action: {type: any}) => {
     switch (action.type) {
       case 'increment':
-        return {count: state.count + 1};
+        return {...state, count: state.count + 1};
       case 'decrement':
-        return {count: state.count - 1};
+        return {...state, count: state.count - 1};
       case 'reset':
-        return {count: 0};
+        return {...state, count: 0};
       default:
         throw new Error();
     }
   };
-  type ButtonMakerParams = {
-    buttonTitle: string;
-    action: {type: 'reset' | 'increment' | 'decrement'; payload: any};
-  };
-  // const ButtonMaker: FC<ButtonMakerParams> = ({buttonTitle, action}) => {
-  //   const {dispatch} = useContext(PublicContext);
-  //   return (
-  //     <TouchableOpacity onPress={() => {dispatch({type: 'reset'})}}>
-  //       <Text>{buttonTitle}</Text>
-  //     </TouchableOpacity>
-  //   );
-  // };
 
-  const Counter = (initialCount: any) => {
+  const ButtonMaker: FC<ButtonMakerParamsType> = ({action}) => {
+    const dispatch = useContext(PublicContext);
+    return (
+      <TouchableOpacity onPress={() => dispatch({type: action.type})}>
+        <Text>{action.type}</Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const Counter = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
     return (
-      <PublicContext.Provider value={{dispatch}}>
+      <PublicContext.Provider value={dispatch}>
         <Text>Count:::{state.count}</Text>
-        {/* <ButtonMaker
-          buttonTitle={'reset'}
-          action={{
-            type: 'reset',
-            payload: initialCount,
-          }}
-        /> */}
-        <TouchableOpacity onPress={() => dispatch({type: 'increment'})}>
-          <Text>Test</Text>
-        </TouchableOpacity>
+        <ButtonMaker buttonTitle={'increment'} action={{type: 'increment'}} />
+        <ButtonMaker buttonTitle={'decrement'} action={{type: 'decrement'}} />
+        <ButtonMaker buttonTitle={'reset'} action={{type: 'reset'}} />
       </PublicContext.Provider>
     );
   };
 
-  return <Counter initialCount={0} />;
+  return <Counter />;
 };
 export default UseReducerDemo;
