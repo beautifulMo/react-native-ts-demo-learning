@@ -1,25 +1,31 @@
 import React, {createContext, FC, useContext, useReducer} from 'react';
-import {Text, TouchableOpacity} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 
-const PublicContext = createContext({});
+const PublicContext = createContext(() => {});
 
-type ActionType = {type: 'reset' | 'increment' | 'decrement'; payload?: any};
-type ButtonMakerParamsType = {
-  buttonTitle: string;
+type ActionType = {
+  type: 'reset' | 'increase' | 'decrease';
+  payload?: any;
+};
+
+type StateType = {
+  count: number;
+};
+
+type ButtonParams = {
   action: ActionType;
 };
 
 const UseReducerDemo = () => {
-  //init
-  const initialState = {count: 0};
-
-  //reducer 纯函数
-  const reducer = (state: {count: number}, action: {type: any}) => {
+  const initialState = {
+    count: 0,
+  };
+  const reducer = (state: StateType, action: ActionType) => {
     switch (action.type) {
-      case 'increment':
-        return {...state, count: state.count + 1};
-      case 'decrement':
+      case 'decrease':
         return {...state, count: state.count - 1};
+      case 'increase':
+        return {...state, count: state.count + 1};
       case 'reset':
         return {...state, count: 0};
       default:
@@ -27,7 +33,7 @@ const UseReducerDemo = () => {
     }
   };
 
-  const ButtonMaker: FC<ButtonMakerParamsType> = ({action}) => {
+  const Button: FC<ButtonParams> = ({action}) => {
     const dispatch = useContext(PublicContext);
     return (
       <TouchableOpacity onPress={() => dispatch({type: action.type})}>
@@ -38,16 +44,17 @@ const UseReducerDemo = () => {
 
   const Counter = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
+
     return (
       <PublicContext.Provider value={dispatch}>
         <Text>Count:::{state.count}</Text>
-        <ButtonMaker buttonTitle={'increment'} action={{type: 'increment'}} />
-        <ButtonMaker buttonTitle={'decrement'} action={{type: 'decrement'}} />
-        <ButtonMaker buttonTitle={'reset'} action={{type: 'reset'}} />
+        <Button action={{type: 'increase'}} />
+        <Button action={{type: 'decrease'}} />
+        <Button action={{type: 'reset'}} />
       </PublicContext.Provider>
     );
   };
-
   return <Counter />;
 };
+
 export default UseReducerDemo;
