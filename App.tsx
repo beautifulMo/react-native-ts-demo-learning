@@ -26,6 +26,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import UseStateDemo from './UseStateDemo';
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -91,6 +92,7 @@ const App = () => {
           <LearnMoreLinks />
         </View>
       </ScrollView> */}
+      <UseStateDemo />
     </SafeAreaView>
   );
 };
