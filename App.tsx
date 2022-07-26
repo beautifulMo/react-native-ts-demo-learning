@@ -26,6 +26,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import UseMemoDemo from './UseMemoDemo';
 
 const Section: React.FC<
   PropsWithChildren<{
@@ -66,6 +67,7 @@ const App = () => {
 
   return (
     <SafeAreaView style={backgroundStyle}>
+      <UseMemoDemo />
       {/* <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
